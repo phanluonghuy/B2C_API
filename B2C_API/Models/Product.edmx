@@ -20,8 +20,8 @@
           </Key>
           <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Phone" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Address" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Address" Type="varchar" MaxLength="50" />
           <Property Name="OrderID" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="OrderDate" Type="date" Nullable="false" />
           <Property Name="TotalAmount" Type="decimal" Precision="10" Scale="2" Nullable="false" />
@@ -80,22 +80,10 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PhoneManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Products">
-          <Key>
-            <PropertyRef Name="ProductID" />
-          </Key>
-          <Property Name="ProductID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="UnitPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="ProImage" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="OrderDetails_Guest" Relationship="PhoneManagerModel.FK_ProductIDGuest" FromRole="Products" ToRole="OrderDetails_Guest" />
-        </EntityType>
         <EntityContainer Name="PhoneManagerEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Products" EntityType="Self.Products" />
           <EntitySet Name="OrderDetails_Guest" EntityType="PhoneManagerModel.OrderDetails_Guest" />
           <EntitySet Name="Orders_Guest" EntityType="PhoneManagerModel.Orders_Guest" />
+          <EntitySet Name="Products" EntityType="PhoneManagerModel.Products" />
           <AssociationSet Name="FK_OrderIDGuest" Association="PhoneManagerModel.FK_OrderIDGuest">
             <End Role="Orders_Guest" EntitySet="Orders_Guest" />
             <End Role="OrderDetails_Guest" EntitySet="OrderDetails_Guest" />
@@ -122,14 +110,26 @@
           </Key>
           <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Phone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="OrderID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <Property Name="PaymentMethod" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="OrderDetails_Guest" Relationship="PhoneManagerModel.FK_OrderIDGuest" FromRole="Orders_Guest" ToRole="OrderDetails_Guest" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="ProImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="OrderDetails_Guest" Relationship="PhoneManagerModel.FK_ProductIDGuest" FromRole="Products" ToRole="OrderDetails_Guest" />
         </EntityType>
         <Association Name="FK_OrderIDGuest">
           <End Type="PhoneManagerModel.Orders_Guest" Role="Orders_Guest" Multiplicity="1" />
@@ -161,18 +161,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PhoneManagerModelStoreContainer" CdmEntityContainer="PhoneManagerEntities">
-          <EntitySetMapping Name="Products">
-            <EntityTypeMapping TypeName="PhoneManagerModel.Products">
-              <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Brand" ColumnName="Brand" />
-                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
-                <ScalarProperty Name="ProImage" ColumnName="ProImage" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails_Guest">
             <EntityTypeMapping TypeName="PhoneManagerModel.OrderDetails_Guest">
               <MappingFragment StoreEntitySet="OrderDetails_Guest">
@@ -194,6 +182,18 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="PhoneManagerModel.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="ProImage" ColumnName="ProImage" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

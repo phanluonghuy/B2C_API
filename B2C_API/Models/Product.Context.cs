@@ -25,8 +25,8 @@ namespace B2C_API.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<OrderDetails_Guest> OrderDetails_Guest { get; set; }
         public virtual DbSet<Orders_Guest> Orders_Guest { get; set; }
+        public virtual DbSet<Products> Products { get; set; }
     }
 }

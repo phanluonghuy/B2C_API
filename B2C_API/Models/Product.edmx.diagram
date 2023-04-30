@@ -5,9 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="89027d19d1e2440ea83dc919e2cc9446" Name="Diagram1">
-        <EntityTypeShape EntityType="PhoneManagerModel.Products" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="PhoneManagerModel.OrderDetails_Guest" Width="1.5" PointX="3" PointY="1" />
-        <EntityTypeShape EntityType="PhoneManagerModel.Orders_Guest" Width="1.5" PointX="0.75" PointY="5.625" />
+        <EntityTypeShape EntityType="PhoneManagerModel.OrderDetails_Guest" Width="1.5" PointX="3" PointY="1.5" />
+        <EntityTypeShape EntityType="PhoneManagerModel.Orders_Guest" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="PhoneManagerModel.Products" Width="1.5" PointX="0.75" PointY="5.25" />
         <AssociationConnector Association="PhoneManagerModel.FK_OrderIDGuest" />
         <AssociationConnector Association="PhoneManagerModel.FK_ProductIDGuest" />
       </Diagram>

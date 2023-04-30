@@ -110,33 +110,52 @@ namespace B2C_API.Controllers
             //    // Handle the error as needed
             //    return RedirectToAction("Checkout_Fail", "ShoppingCart");
             //}
-            var _orders_Guest = new Orders_Guest
+            try
             {
-                Name = form["Name"],
-                Phone = form["Phone"],
-                Email = form["Email"],
-                Address = form["Address"],
-                OrderID = DateTime.Now.ToString("yyyyMMddHHmmss"),
-                OrderDate = DateTime.Now,
-                TotalAmount = decimal.Parse(form["Total_money"].ToString()),
-                PaymentMethod = form["Payment"],
-                Status = "Pending",
-            };
-            using (var client = new HttpClient())
+                var _orders_Guest = new Orders_Guest
+                {
+                    Name = form["Name"],
+                    Phone = form["Phone"],
+                    Email = form["Email"],
+                    Address = form["Address"],
+                    OrderID = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    OrderDate = DateTime.Now,
+                    TotalAmount = decimal.Parse(form["Total_money"].ToString()),
+                    PaymentMethod = form["Payment"],
+                    Status = "Pending",
+                };
+
+                Orders_GuestController orders_GuestController = new Orders_GuestController();
+                orders_GuestController.PostOrders_Guest(_orders_Guest);
+                Cart cart = Session["Cart"] as Cart;
+                foreach( var item in cart.Items)
+                {
+                    var _orderdetail_guest = new OrderDetails_Guest
+                    {
+                        OrderID = _orders_Guest.OrderID,
+                        ProductID = item._shopping_products.ProductID,
+                        Quantity = item._shopping_quanity,
+                    };
+                    OrderDetails_GuestController orderDetails_GuestController = new OrderDetails_GuestController();
+                    orderDetails_GuestController.PostOrderDetails_Guest(_orderdetail_guest);
+                }
+                
+                cart.clearCart();
+                return RedirectToAction("Checkout_Success", "ShoppingCart");
+            }
+            catch 
             {
-                client.BaseAddress = new Uri("https://localhost:44324");
-                var result = client.PostAsync("/api/Orders_Guest", _orders_Guest, new JsonMediaTypeFormatter()).Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return RedirectToAction("Checkout_Fail", "ShoppingCart");
-                }
-                else
-                {
-                    string content = result.Content.ReadAsStringAsync().Result;
-                    return RedirectToAction("Checkout_Succes", "ShoppingCart");
-                }
+                return RedirectToAction("Checkout_Fail", "ShoppingCart");
             }
         }
+        public ActionResult Checkout_Fail()
+        {
+            return View();
+        }
 
+        public ActionResult Checkout_Success()
+        {
+            return View();
+        }
     }
 }
