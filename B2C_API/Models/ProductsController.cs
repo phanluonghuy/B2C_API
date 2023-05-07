@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.Results;
 using System.Web.Mvc;
 
 namespace B2C_API.Models
@@ -16,10 +18,50 @@ namespace B2C_API.Models
     {
         private PhoneManagerEntities db = new PhoneManagerEntities();
 
-        // GET: api/Products
-        public IQueryable<Products> GetProducts()
+        //GET: api/Products
+        //public IQueryable<Products> GetProducts()
+        //{
+        //    return db.Products;
+        //}
+        private readonly string connectionString = "data source=(local)\\SQLEXPRESS;initial catalog=PhoneManager;integrated security=True;";
+        [ResponseType(typeof(Products))]
+        public IHttpActionResult GetProducts()
         {
-            return db.Products;
+            List<Products> products = new List<Products>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand("SELECT *\r\nFROM Products\r\nINNER JOIN (\r\n  SELECT p.ProductID, SUM(d.Quantity) AS TotalQuantity\r\n  FROM Products p\r\n  INNER JOIN WarehouseReceiptDetails d ON p.ProductID = d.ProductID\r\n  GROUP BY p.ProductID\r\n) subquery ON Products.ProductID = subquery.ProductID;", connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                products.Add(new Products
+                                {
+                                    ProductID = reader.GetString(0),
+                                    ProductName = reader.GetString(1),
+                                    Description = reader.GetString(2),
+                                    Brand = reader.GetString(3),
+                                    UnitPrice = reader.GetDecimal(4),
+                                    ProImage = (byte[])reader["ProImage"],
+                                    Quanity = (int)reader["TotalQuantity"]
+                                }); ;
+                            }
+                        }
+                    }
+                }
+
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         // GET: api/Products/5

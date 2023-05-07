@@ -24,6 +24,7 @@ namespace B2C_API.Models
         public string ProductName { get; set; }
         public string Description { get; set; }
         public string Brand { get; set; }
+        public int Quanity { get; set; }
         public decimal UnitPrice { get; set; }
         public byte[] ProImage { get; set; }
     

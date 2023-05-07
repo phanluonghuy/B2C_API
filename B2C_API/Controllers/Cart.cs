@@ -10,6 +10,7 @@ namespace B2C_API.Controllers
     {
         public Products _shopping_products { get; set; }
         public int _shopping_quanity { get; set; }
+
     }
     public class Cart
     {
@@ -26,8 +27,8 @@ namespace B2C_API.Controllers
                 items.Add(new CartItem
                 {
                     _shopping_products = _product,
-                    _shopping_quanity = _quantity
-                });
+                    _shopping_quanity = _quantity,
+                }); ;
             }
             else
             {

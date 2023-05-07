@@ -1,66 +1,37 @@
 ﻿@model IEnumerable<B2C_API.Models.Products>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-@*<table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UnitPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProImage)
-            </th>
-            <th></th>
-        </tr>
-
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UnitPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProImage)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |
-                @Html.ActionLink("Details", "Details", new { id=item.ProductID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.ProductID })
-            </td>
-        </tr>
+@{
+    ViewBag.Title = "Home Page";
+}
+<style>
+    .card {
+        /*border-radius: 5px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);*/
+        width: 250px;
+        height: 350px;
     }
 
-    </table>*@
+    .img {
+        width: 120px;
+        height: 120px;
+        margin-left: 5px;
+        margin-bottom: 5px;
+    }
+</style>
+<h2>List of products</h2>
 <div class="container">
     <div class="row">
         @foreach (var item in Model)
         {
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card">
-                    @Html.DisplayFor(model => item.Brand) @Html.DisplayFor(model => item.ProductName) <br>
-                    <img src="data:image;base64,@System.Convert.ToBase64String(item.ProImage)" width="80" height="80" /> <br>
-                    Description : @Html.DisplayFor(model => item.Description) <br>
-                    Price : @Html.DisplayFor(model => item.UnitPrice) <br>
+                    <b>@Html.DisplayFor(model => item.Brand) @Html.DisplayFor(model => item.ProductName)</b> <br>
+                    <img class="img" src="data:image;base64,@System.Convert.ToBase64String(item.ProImage)" /> <br>
+                    @Html.DisplayFor(model => item.Description) <br>
+                    <big>Price : @Html.DisplayFor(model => item.UnitPrice) </big><br>
+                    <b>Quanity: @Html.DisplayFor(model => item.Quanity) </b>
                     <a href="/ShoppingCart/AddtoCart/@item.ProductID">
-                        <img src="@Url.Content("~/Content/add-to-cart.png")" style="height:18px;width:18px" />
+                        <img src="@Url.Content("~/Content/add-to-cart.png")" style="height:36px;width:36px" />
                     </a>
                 </div>
             </div>

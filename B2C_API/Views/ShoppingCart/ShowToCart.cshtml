@@ -40,7 +40,7 @@
                         @using (Html.BeginForm("Update_Quantity_Product", "ShoppingCart"))
                         {
                             <input type="hidden" value="@item._shopping_products.ProductID" name="Product_ID" />
-                            <input type="number" value="@item._shopping_quanity" name="Product_Quantity" />
+                            <input type="number" value="@item._shopping_quanity" name="Product_Quantity" max=@System.Convert.ToInt16(item._shopping_products.Quanity) />
                             <input type="submit" value="Update Quantity">
                         }
                     </td>
@@ -53,25 +53,27 @@
                 </tr>
 
             }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>
-                    <strong colspan="5">Total: @Model.total_money()</strong>
-                 
-                </td>
+    </table>
+    <tfoot>
+        <tr>
+            <td>
+                <strong colspan="5">Total: @Model.total_money()</strong>
 
-            </tr>
-            @using (Html.BeginForm("CheckOut", "ShoppingCart"))
-            {
-                <input type="hidden" value="@Model.total_money()" name="Total_money" />
+            </td>
+
+        </tr>
+        @using (Html.BeginForm("CheckOut", "ShoppingCart"))
+        {
+            <input type="hidden" value="@Model.total_money()" name="Total_money" />
+            <h2>Input your information: </h2>
+            @*<div class="form-group">
                 <tr>
                     <td>
                         Name <input type="text" name="Name" required /> <br />
                         Email <input type="email" name="Email" required /><br />
                         Phone Number <input type="number" name="Phone" required /> <br />
                         Address <input type="text" name="Address" required /> <br />
-                        Select payment: 
+                        Select payment:
                         <select name="Payment" class="form-control">
                             <option value="Cash">Cash</option>
                             <option value="VNPay">VNPay</option>
@@ -79,8 +81,49 @@
                         <input type="submit" value="CheckOut" class="btn btn-success" />
                     </td>
                 </tr>
-            }
-        </tfoot>
-    </table>
+                </div>*@
+    <form class="form-horizontal" action="/action_page.php">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="Name" placeholder="Enter Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Email:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" name="Email" placeholder="Enter Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Phone:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" name="Phone" placeholder="Enter phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Address:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="Address" placeholder="Enter Address">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">Payment:</label>
+            <div class="col-sm-10">
+                <select name="Payment" class="form-control">
+                    <option value="Cash">Cash</option>
+                    <option value="VNPay">VNPay</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" value="CheckOut"  class="btn btn-success">Submit</button>
+            </div>
+        </div>
+    </form>
+        }
+    </tfoot>
+
     <a href="@Url.Action("Index","Home")">Countinue to shopping</a>
 }
