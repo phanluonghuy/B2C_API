@@ -1,4 +1,4 @@
-//// -----------------------------------------------------------------------
+﻿//// -----------------------------------------------------------------------
 //// <copyright file="Forum.cs" company="Fluent.Infrastructure">
 ////     Copyright © Fluent.Infrastructure. All rights reserved.
 //// </copyright>

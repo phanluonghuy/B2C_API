@@ -34,7 +34,6 @@ namespace B2C_API.Controllers
             {
                 GetCart().Add(product);
             }
-            //return RedirectToAction("ShowToCart", "ShoppingCart");
             return RedirectToAction("Index", "Home");
         }
         public ActionResult ShowToCart()
@@ -72,63 +71,34 @@ namespace B2C_API.Controllers
             ViewBag.infoCart = _t_item;
             return PartialView("BagCart");
         }
-        [HttpPost]
+
         public ActionResult CheckOut(FormCollection form)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    // If the order data is not valid, return a bad request response with error details
-            //    return BadRequest(ModelState);
-            //}
-            //var client = new HttpClient();
-            //client.BaseAddress = new Uri("https://localhost:44324");
-            //Cart cart = Session["Cart"] as Cart;
-            //var _orders_Guest = new Orders_Guest
-            //{
-            //        Name = form["Name"],
-            //        Phone = form["Phone"],
-            //        Email = form["Email"],
-            //        Address = form["Address"],
-            //        OrderID = DateTime.Now.ToString("yyyyMMddHHmmss"),
-            //        OrderDate = DateTime.Now,
-            //        TotalAmount = decimal.Parse(form["Total_money"].ToString()),
-            //        PaymentMethod = form["Payment"],
-            //        Status = "Pending",
-            //};
-            //var response = await client.PostAsJsonAsync("api/Orders_Guest", _orders_Guest);
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    // The order was created successfully
-            //    // Handle the response as needed
-            //    return RedirectToAction("Checkout_Success", "ShoppingCart");
-            //    //return "Succes";
-            //}
-            //else
-            //{
-
-            //    // The request failed
-            //    // Handle the error as needed
-            //    return RedirectToAction("Checkout_Fail", "ShoppingCart");
-            //}
-            try
+            var _orders_Guest = new Orders_Guest
             {
-                var _orders_Guest = new Orders_Guest
-                {
-                    Name = form["Name"],
-                    Phone = form["Phone"],
-                    Email = form["Email"],
-                    Address = form["Address"],
-                    OrderID = DateTime.Now.ToString("yyyyMMddHHmmss"),
-                    OrderDate = DateTime.Now,
-                    TotalAmount = decimal.Parse(form["Total_money"].ToString()),
-                    PaymentMethod = form["Payment"],
-                    Status = "Pending",
-                };
+                Name = form["Name"],
+                Phone = form["Phone"],
+                Email = form["Email"],
+                Address = form["Address"],
+                OrderID = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                OrderDate = DateTime.Now,
+                TotalAmount = decimal.Parse(form["Total_money"].ToString()),
+                PaymentMethod = form["Payment"],
+                Status = "Pending",
+            };
 
+            Session["order_Guest"] = _orders_Guest;
+            string payment = form["Payment"];
+            if (payment == "VNPay")
+                return RedirectToAction("Payment", "Home", new { amount = form["Total_money"].ToString() });
+            else
+            {
+                try
+                {
                 Orders_GuestController orders_GuestController = new Orders_GuestController();
-                orders_GuestController.PostOrders_Guest(_orders_Guest);
+                orders_GuestController.PostOrders_Guest(Session["order_Guest"] as Orders_Guest);
                 Cart cart = Session["Cart"] as Cart;
-                foreach( var item in cart.Items)
+                foreach (var item in cart.Items)
                 {
                     var _orderdetail_guest = new OrderDetails_Guest
                     {
@@ -139,11 +109,42 @@ namespace B2C_API.Controllers
                     OrderDetails_GuestController orderDetails_GuestController = new OrderDetails_GuestController();
                     orderDetails_GuestController.PostOrderDetails_Guest(_orderdetail_guest);
                 }
-                
+
                 cart.clearCart();
                 return RedirectToAction("Checkout_Success", "ShoppingCart");
             }
-            catch 
+                catch
+            {
+                return RedirectToAction("Checkout_Fail", "ShoppingCart");
+            }
+        }
+        }
+
+        public ActionResult CheckOut_Import(string amount)
+        {
+
+            try
+            {
+                Orders_Guest _orders_Guest = Session["order_Guest"] as Orders_Guest;
+                Orders_GuestController orders_GuestController = new Orders_GuestController();
+                orders_GuestController.PostOrders_Guest(_orders_Guest);
+                Cart cart = Session["Cart"] as Cart;
+                foreach (var item in cart.Items)
+                {
+                    var _orderdetail_guest = new OrderDetails_Guest
+                    {
+                        OrderID = _orders_Guest.OrderID,
+                        ProductID = item._shopping_products.ProductID,
+                        Quantity = item._shopping_quanity,
+                    };
+                    OrderDetails_GuestController orderDetails_GuestController = new OrderDetails_GuestController();
+                    orderDetails_GuestController.PostOrderDetails_Guest(_orderdetail_guest);
+                }
+
+                cart.clearCart();
+                return RedirectToAction("Checkout_Success", "ShoppingCart");
+            }
+            catch
             {
                 return RedirectToAction("Checkout_Fail", "ShoppingCart");
             }

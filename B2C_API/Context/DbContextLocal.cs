@@ -1,4 +1,4 @@
-//// -----------------------------------------------------------------------
+﻿//// -----------------------------------------------------------------------
 //// <copyright file="DbContextLocal.cs" company="Fluent.Infrastructure">
 ////     Copyright © Fluent.Infrastructure. All rights reserved.
 //// </copyright>
@@ -11,8 +11,9 @@
 using System.Data.Entity;
 using Fluent.Infrastructure.FluentDBContext;
 using B2C_API.Models;
+using Microsoft.Ajax.Utilities;
 
-namespace B2C_API.DataBase 
+namespace B2C_API.DataBase
 {
     public class DbContextLocal : DBContext
     {
